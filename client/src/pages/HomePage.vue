@@ -6,6 +6,36 @@
         <AlbumCard :album="album" />
       </div>
     </div>
+    <div class="row my-4 justify-content-center">
+      <div class="col-12 col-lg-10">
+        <div class="d-flex justify-content-around bg-primary rounded-pill p-3">
+          <button
+            class="btn btn-outline-light w-100 mx-4"
+            @click="changeFilterCategory('')"
+          >
+            All
+          </button>
+          <button
+            class="btn btn-outline-light w-100 mx-4"
+            @click="changeFilterCategory('animals')"
+          >
+            Animals
+          </button>
+          <button
+            class="btn btn-outline-light w-100 mx-4"
+            @click="changeFilterCategory('pokemon')"
+          >
+            Pokemon
+          </button>
+          <button
+            class="btn btn-outline-light w-100 mx-4"
+            @click="changeFilterCategory('germs')"
+          >
+            Germs
+          </button>
+        </div>
+      </div>
+    </div>
     <div class="row p-5">
       <div v-for="album in albums" :key="album.id" class="col-6 col-lg-3">
         <AlbumCard :album="album" />
@@ -15,15 +45,18 @@
 </template>
 
 <script>
-import { computed, onMounted } from "vue";
+import { computed, onMounted, ref } from "vue";
 import { logger } from "../utils/Logger.js";
 import Pop from "../utils/Pop.js";
 import { albumsService } from "../services/AlbumsService.js";
 import { AppState } from "../AppState.js";
 import AlbumCard from "../components/AlbumCard.vue";
+import FilterBar from "../components/FilterBar.vue";
 
 export default {
   setup() {
+    const filterCategory = ref("");
+
     onMounted(() => {
       getAlbums();
     });
@@ -36,11 +69,24 @@ export default {
       }
     }
     return {
-      albums: computed(() => AppState.albums),
+      filterCategory,
+      albums: computed(() => {
+        if (!filterCategory.value) {
+          return AppState.albums;
+        } else {
+          return AppState.albums.filter(
+            (album) => album.category == filterCategory.value
+          );
+        }
+      }),
       myAlbums: computed(() => AppState.myAlbums),
+
+      changeFilterCategory(category) {
+        filterCategory.value = category;
+      },
     };
   },
-  components: { AlbumCard },
+  components: { AlbumCard, FilterBar },
 };
 </script>
 
