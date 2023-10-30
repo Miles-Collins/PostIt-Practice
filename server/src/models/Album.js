@@ -2,7 +2,7 @@ import { Schema } from "mongoose";
 
 export const AlbumSchema = new Schema({
   title: {type: String, required: true, min: 1, max: 20 },
-  category: {type: String, required: true},
+  category: {type: String, enum: ['cars', 'animals', 'pokemon', 'misc', 'fish', 'food', 'germs', 'coding', 'games'], default:'misc', required: true},
   archived: {type: Boolean, default: false},
   coverImg: {type: String, required: true, max: 500},
   creatorId: {type: Schema.Types.ObjectId, required: true, ref: "Account"},

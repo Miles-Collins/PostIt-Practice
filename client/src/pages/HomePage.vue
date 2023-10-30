@@ -1,41 +1,47 @@
 <template>
-  <div class="home flex-grow-1 d-flex flex-column align-items-center justify-content-center">
-    <div class="home-card p-5 bg-white rounded elevation-3">
-      <img src="https://bcw.blob.core.windows.net/public/img/8600856373152463" alt="CodeWorks Logo"
-        class="rounded-circle">
-      <h1 class="my-5 bg-dark text-white p-3 rounded text-center">
-        Vue 3 Starter
-      </h1>
+  <div class="container">
+    <div class="row mb-5">
+      <p class="fs-1 text-white">My Albums</p>
+      <div v-for="album in myAlbums" :key="album.id" class="col-4 col-lg-2">
+        <AlbumCard :album="album" />
+      </div>
+    </div>
+    <div class="row p-5">
+      <div v-for="album in albums" :key="album.id" class="col-6 col-lg-3">
+        <AlbumCard :album="album" />
+      </div>
     </div>
   </div>
 </template>
 
 <script>
+import { computed, onMounted } from "vue";
+import { logger } from "../utils/Logger.js";
+import Pop from "../utils/Pop.js";
+import { albumsService } from "../services/AlbumsService.js";
+import { AppState } from "../AppState.js";
+import AlbumCard from "../components/AlbumCard.vue";
+
 export default {
   setup() {
-    return {}
-  }
-}
+    onMounted(() => {
+      getAlbums();
+    });
+    async function getAlbums() {
+      try {
+        await albumsService.getAlbums();
+      } catch (error) {
+        logger.error("[ERROR]", error);
+        Pop.error("[ERROR]", error.message);
+      }
+    }
+    return {
+      albums: computed(() => AppState.albums),
+      myAlbums: computed(() => AppState.myAlbums),
+    };
+  },
+  components: { AlbumCard },
+};
 </script>
 
-<style scoped lang="scss">
-.home {
-  display: grid;
-  height: 80vh;
-  place-content: center;
-  text-align: center;
-  user-select: none;
-
-  .home-card {
-    width: 50vw;
-
-    >img {
-      height: 200px;
-      max-width: 200px;
-      width: 100%;
-      object-fit: contain;
-      object-position: center;
-    }
-  }
-}
-</style>
+<style scoped lang="scss"></style>

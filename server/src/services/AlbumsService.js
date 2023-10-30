@@ -2,6 +2,7 @@ import { dbContext } from "../db/DbContext.js";
 import { BadRequest, Forbidden } from "../utils/Errors.js";
 
 class AlbumsService {
+
   async getAll() {
     const albums = await dbContext.Albums.find().populate('memberCount creator', '-email')
     return albums
@@ -44,6 +45,11 @@ class AlbumsService {
     return album
   }
 
+
+    async getMyAlbums(creatorId) {
+    const albums = await dbContext.Albums.find({creatorId}).populate('memberCount creator', '-email')
+    return albums
+  }
 }
 
 export const albumsService = new AlbumsService()
