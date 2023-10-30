@@ -2,6 +2,8 @@ import { Auth0Provider } from "@bcwdev/auth0provider";
 import BaseController from "../utils/BaseController.js";
 import { logger } from "../utils/Logger.js";
 import { albumsService } from "../services/AlbumsService.js";
+import { picturesService } from "../services/PicturesService.js";
+import { collaboratorsService } from "../services/CollaboratorsService.js";
 
 export class AlbumsController extends BaseController {
   constructor() {
@@ -9,6 +11,8 @@ export class AlbumsController extends BaseController {
     this.router
     .get('', this.getAll)
     .get('/:albumId', this.getOne)
+    .get('/:albumId/pictures', this.getPictures)
+    .get('/:albumId/collaborators', this.getCollaborators)
     .use(Auth0Provider.getAuthorizedUserInfo)
     .post('', this.create)
     .put('/:albumId', this.edit)
@@ -61,11 +65,37 @@ export class AlbumsController extends BaseController {
   try {
     const albumId = req.params.albumId
     const userInfo = req.userInfo.id
-    const message = await albumsService.delete(albumId, userInfo)
-    return res.send(message)
+    const album = await albumsService.delete(albumId, userInfo)
+    return res.send(album)
   } catch (error) {
     next(error)
   }
   }
+
+  // Pictures
+
+  async getPictures (req, res, next) {
+  try {
+    const albumId = req.params.albumId
+    const pictures = await picturesService.getPictures(albumId)
+    return res.send(pictures)
+  } catch (error) {
+    next(error)
+  }
+  }
+
+  // Collaborators
+
+  async getCollaborators (req, res, next) {
+  try {
+    const albumId = req.params.albumId
+    const collaborators = await collaboratorsService.getCollaborators(albumId)
+    return res.send(collaborators)
+  } catch (error) {
+    next(error)
+  }
+  }
+
+
 
 }
