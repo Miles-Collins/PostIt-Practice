@@ -1,4 +1,11 @@
 <template>
+  <i
+    role="button"
+    type="button"
+    @click="deleteAlbum()"
+    v-if="album.creatorId == account.id"
+    class="text-danger fs-4 mdi mdi-close-box"
+  ></i>
   <router-link :to="{ name: 'Album', params: { albumId: album.id } }">
     <div class="row album-box-shadow text-white">
       <div class="col-12 text-center">
@@ -13,13 +20,35 @@
 </template>
 
 <script>
+import { computed } from "vue";
+import { AppState } from "../AppState.js";
 import { Album } from "../models/Album.js";
+import { logger } from "../utils/Logger.js";
+import Pop from "../utils/Pop.js";
+import { albumsService } from "../services/AlbumsService.js";
 
 export default {
   props: { album: { type: Album, required: true } },
 
-  setup() {
-    return {};
+  setup(props) {
+    return {
+      account: computed(() => AppState.account),
+
+      async deleteAlbum() {
+        try {
+          const yes = await Pop.confirm(
+            `Are you sure you want to delete the ${props.album.title} album?`
+          );
+          if (!yes) {
+            return;
+          }
+          await albumsService.deleteAlbum(props.album.id);
+        } catch (error) {
+          logger.error("[ERROR]", error);
+          Pop.error("[ERROR]", error.message);
+        }
+      },
+    };
   },
 };
 </script>

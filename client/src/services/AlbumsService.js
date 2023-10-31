@@ -20,6 +20,7 @@ class AlbumsService {
     const res = await api.post("api/albums", albumData);
     logger.log("[ALBUMS SERVICE] createAlbum => res.data:", res.data);
     AppState.albums.unshift(new Album(res.data));
+    AppState.myAlbums.unshift(new Album(res.data));
   }
 
   // My Albums
@@ -28,6 +29,15 @@ class AlbumsService {
     const res = await api.get("account/albums");
     logger.log("[ALBUMS SERVICE] getMyAlbums => res.data:", res.data);
     AppState.myAlbums = res.data.map((album) => new Album(album));
+  }
+
+  async deleteAlbum(albumId) {
+    const res = await api.delete(`api/albums/${albumId}`);
+    logger.log("[ALBUMS SERVICE] deleteAlbum() => res.data:", res.data);
+    AppState.albums = AppState.albums.filter((album) => album.id != albumId);
+    AppState.myAlbums = AppState.myAlbums.filter(
+      (album) => album.id != albumId
+    );
   }
 }
 

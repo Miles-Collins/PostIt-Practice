@@ -2,7 +2,11 @@
   <div class="container">
     <div class="row mb-5">
       <p class="fs-1 text-white">My Albums</p>
-      <div v-for="album in myAlbums" :key="album.id" class="col-4 col-lg-2">
+      <div
+        v-for="album in myAlbums"
+        :key="album.id"
+        class="col-4 mx-4 col-lg-2"
+      >
         <AlbumCard :album="album" />
       </div>
     </div>
@@ -10,25 +14,25 @@
       <div class="col-12 col-lg-10">
         <div class="d-flex justify-content-around bg-primary rounded-pill p-3">
           <button
-            class="btn btn-outline-light w-100 mx-4"
+            class="btn btn-outline-light w-lg-100 mx-lg-4"
             @click="changeFilterCategory('')"
           >
             All
           </button>
           <button
-            class="btn btn-outline-light w-100 mx-4"
+            class="btn btn-outline-light w-lg-100 mx-lg-4"
             @click="changeFilterCategory('animals')"
           >
             Animals
           </button>
           <button
-            class="btn btn-outline-light w-100 mx-4"
+            class="btn btn-outline-light w-lg-100 mx-lg-4"
             @click="changeFilterCategory('pokemon')"
           >
             Pokemon
           </button>
           <button
-            class="btn btn-outline-light w-100 mx-4"
+            class="btn btn-outline-light w-lg-100 mx-lg-4"
             @click="changeFilterCategory('germs')"
           >
             Germs
@@ -36,8 +40,8 @@
         </div>
       </div>
     </div>
-    <div class="row p-5">
-      <div v-for="album in albums" :key="album.id" class="col-6 col-lg-3">
+    <div class="row justify-content-around p-5">
+      <div v-for="album in albums" :key="album.id" class="col-6 col-lg-3 mx-1">
         <AlbumCard :album="album" />
       </div>
     </div>
@@ -51,7 +55,6 @@ import Pop from "../utils/Pop.js";
 import { albumsService } from "../services/AlbumsService.js";
 import { AppState } from "../AppState.js";
 import AlbumCard from "../components/AlbumCard.vue";
-import FilterBar from "../components/FilterBar.vue";
 
 export default {
   setup() {
@@ -86,7 +89,7 @@ export default {
       },
     };
   },
-  components: { AlbumCard, FilterBar },
+  components: { AlbumCard },
 };
 </script>
 

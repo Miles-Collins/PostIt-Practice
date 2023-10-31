@@ -14,7 +14,7 @@ export class PicturesController extends BaseController{
   async create (req, res, next) {
   try {
     const pictureData = req.body
-    pictureData.creatorId = req.userInfo.Id
+    pictureData.creatorId = req.userInfo.id
     const picture = await picturesService.create(pictureData)
     return res.send(picture)
   } catch (error) {
@@ -25,7 +25,7 @@ export class PicturesController extends BaseController{
   async delete (req, res, next) {
   try {
     const pictureId = req.params.pictureId
-    const userId = req.userInfo.Id
+    const userId = req.userInfo.id
     const message = await picturesService.delete(pictureId, userId)
     return res.send(message)
   } catch (error) {

@@ -11,7 +11,9 @@ class CollaboratorsService {
     return `Successfully removed Collaborator.`
   }
   async create(collaboratorBody) {
-    throw new Error("Method not implemented.")
+    const collaborator = await dbContext.Collaborators.create(collaboratorBody)
+    await collaborator.populate('album profile', '-email')
+    return collaborator
   }
   async getCollaborators(albumId) {
     const collaborators = await dbContext.Collaborators.find({albumId}).populate('album profile', '-email')
